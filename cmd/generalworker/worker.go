@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"summy/email"
+	"summy/extraction/email"
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"

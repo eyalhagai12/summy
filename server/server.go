@@ -2,13 +2,17 @@ package server
 
 import (
 	"context"
-	"summy/email"
+	"summy/extraction/email"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	"go.temporal.io/sdk/client"
+	"golang.org/x/oauth2"
 )
 
 type Server struct {
+	db             *sqlx.DB
+	oauthConfig    *oauth2.Config
 	temporalClient client.Client
 }
 
