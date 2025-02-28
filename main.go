@@ -1,16 +1,33 @@
 package main
 
 import (
-	"log"
-	"summy/server"
+	"fmt"
+	"summy/workerpool"
+	"time"
 )
 
+type testTask struct{}
+
+func (testTask) Execute(output chan<- any) error {
+	fmt.Printf("Hello World!!!\n")
+	time.Sleep(10 * time.Millisecond)
+	return nil
+}
+
 func main() {
-	config := server.LoadServerConfig()
-	s := server.New(config)
-	if err := s.Start(); err != nil {
-		log.Fatal("failed to start scheduled tasks", err)
+	// config := server.LoadServerConfig()
+	// s := server.New(config)
+	wp := workerpool.New(100, 100)
+
+	for range 10000 {
+		wp.Submit(testTask{})
 	}
+
+	wp.Close()
+
+	// if err := s.Start(); err != nil {
+	// 	log.Fatal("failed to start scheduled tasks", err)
+	// }
 }
 
 // import (
