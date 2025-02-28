@@ -25,37 +25,11 @@ services:
     container_name: pgadmin
     environment:
       - PGADMIN_DEFAULT_EMAIL=summy@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=12345
+      - PGADMIN_DEFAULT_PASSWORD_FILE=/run/secrets/db-password
     ports:
-      - 80:80
-
-  temporal:
-    container_name: temporal
-    depends_on:
-      - postgresql
-    environment:
-      - DB=postgres12
-      - DB_PORT=5432
-      - POSTGRES_USER=summy
-      - POSTGRES_PWD=12345
-      - POSTGRES_SEEDS=postgresql
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
-    image: temporalio/auto-setup:latest
-    ports:
-      - 7233:7233
-    volumes:
-      - ./secrets/temporal_dynamic_config:/etc/temporal/config/dynamicconfig
-  
-  temporal-ui:
-    container_name: temporal-ui
-    depends_on:
-      - temporal
-    environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
-    image: temporalio/ui:latest
-    ports:
-      - 8081:8080
+      - 81:80
+    secrets:
+      - db-password
 
 volumes:
   db-data:

@@ -37,12 +37,21 @@ func (g *GmailAuthHandlers) GetAuthCode(c echo.Context, request GmailAuthCodeReq
 
 	_, err = sqlx.NamedExec(
 		g.db,
-		"INSERT INTO gmail_auth_info (user_id, access_code, refresh_token, expiration) VALUES ($1, $2, $3, $4);",
+		"INSERT INTO gmail_auth_info (user_id, access_token, refresh_token) VALUES ($1, $2, $3);",
 		authInfo,
 	)
 	if err != nil {
-		return "", echo.NewHTTPError(http.StatusInternalServerError, "failed to store auth information - ", err)
+		return "", echo.NewHTTPError(http.StatusInternalServerError, "failed to store auth information - "+err.Error())
 	}
 
 	return "", nil
+}
+
+func (g *GmailAuthHandlers) HandleGmailAuth(c echo.Context, request GmailAuthRequest) (GmailAuthResponse, error) {
+	if request.UserID == "" {
+		return GmailAuthResponse{}, echo.NewHTTPError(http.StatusBadRequest, "must have a userId as a query param")
+	}
+
+	url := g.oauthConfig.AuthCodeURL(request.UserID, oauth2.AccessTypeOffline)
+	return GmailAuthResponse{URL: url}, nil
 }
