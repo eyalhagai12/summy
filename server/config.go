@@ -9,11 +9,15 @@ import (
 )
 
 type Config struct {
-	DbConnectionString string `env:"POSTGRES_URL"`
-	GmailClientID      string `env:"GMAIL_CLIENT_ID"`
-	GmailClientSecret  string `env:"GMAIL_CLIENT_SECRET"`
+	DbConnectionString string `env:"POSTGRES_URL,required"`
 
-	ServerURL string `env:"SERVER_URL"`
+	GmailClientID     string `env:"GMAIL_CLIENT_ID"`
+	GmailClientSecret string `env:"GMAIL_CLIENT_SECRET"`
+
+	HostURL string `env:"SERVER_URL"`
+
+	WorkerPoolSize      int `env:"WORKER_POOL_SIZE,default=10"`
+	TaskBufferPerWorker int `env:"WORKER_BUFFER,default=20"`
 }
 
 func LoadServerConfig() Config {

@@ -9,7 +9,7 @@ import (
 type Task struct {
 	Entity
 
-	Name        string    `db:"name"`
+	Title       string    `db:"title"`
 	Description string    `db:"description"`
 	DueDate     time.Time `db:"due_date"`
 	Status      string    `db:"status"`

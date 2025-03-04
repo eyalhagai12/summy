@@ -1,0 +1,30 @@
+package templates
+
+import "summy/models"
+
+templ Home(child templ.Component) {
+    <div>
+        <h1>Tasks:</h1>
+        @child
+    </div>
+}
+
+templ FetchTasksError() {
+    <div>
+        failed to fetch tasks!
+    </div>
+}
+
+templ TaskList(taskList []models.Task) {
+    <div>
+        if len(taskList) <= 0 {
+            No Tasks!
+        } else {
+            <ul>
+                for _, task := range taskList {
+                    <li>{ task.Title }</li>
+                }
+            </ul>
+        }
+    </div>
+}

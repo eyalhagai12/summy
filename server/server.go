@@ -1,6 +1,8 @@
 package server
 
 import (
+	"summy/workerpool"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	_ "github.com/lib/pq"
@@ -13,6 +15,7 @@ type Server struct {
 	app         *echo.Echo
 	db          *sqlx.DB
 	oauthConfig *oauth2.Config
+	wp          *workerpool.WorkerPool
 }
 
 func New(config Config) *Server {
@@ -20,7 +23,7 @@ func New(config Config) *Server {
 	oauthConfig := oauth2.Config{
 		ClientID:     config.GmailClientID,
 		ClientSecret: config.GmailClientSecret,
-		RedirectURL:  config.ServerURL + "/api/gmail/auth/callback",
+		RedirectURL:  config.HostURL + "/api/gmail/auth/callback",
 		Scopes:       []string{gmail.GmailReadonlyScope},
 		Endpoint:     google.Endpoint,
 	}
@@ -30,9 +33,11 @@ func New(config Config) *Server {
 		app:         app,
 		db:          db,
 		oauthConfig: &oauthConfig,
+		wp:          workerpool.New(config.WorkerPoolSize, config.TaskBufferPerWorker),
 	}
 
 	server.RegisterRoutes(app.Group("/api"))
+	server.RegisterViews(app)
 
 	return server
 }
