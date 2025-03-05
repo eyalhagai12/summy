@@ -1,8 +1,10 @@
 package server
 
 import (
+	"log"
 	"summy/workerpool"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	_ "github.com/lib/pq"
@@ -38,6 +40,19 @@ func New(config Config) *Server {
 
 	server.RegisterRoutes(app.Group("/api"))
 	server.RegisterViews(app)
+
+	_, err := db.Exec(
+		"INSERT INTO tasks (id, title, description, status, user_id, source) VALUES ($1, $2, $3, $4, $5, $6);",
+		uuid.New(),
+		"test task",
+		"this is the test taks i use",
+		"discovered",
+		uuid.MustParse("679fb22e-a314-4561-85d4-574d34eca9b1"),
+		"manual",
+	)
+	if err != nil {
+		log.Println("failed to add random user -  " + err.Error())
+	}
 
 	return server
 }

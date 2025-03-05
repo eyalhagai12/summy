@@ -26,8 +26,8 @@ func (tv *TaskViews) TasksHome(c echo.Context, request GetAllTasksRequest) templ
 	tasks := []models.Task{}
 	err := tv.db.Select(&tasks, "SELECT * FROM tasks")
 	if err != nil {
-		return templates.Home(templates.FetchTasksError())
+		return templates.Home(tasks, err)
 	}
 
-	return templates.Home(templates.TaskList(tasks))
+	return templates.Home(tasks, nil)
 }
