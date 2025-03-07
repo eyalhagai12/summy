@@ -11,7 +11,7 @@ type HttpHandlerFunc[Req any, Res any] func(echo.Context, Req) (Res, error)
 func HandlerFromFunc[Req any, Res any](handler HttpHandlerFunc[Req, Res], successStatus int) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var request Req
-		if err := c.Bind(&request); err != nil {
+		if err := bindToRequest(c, &request); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, "failed to parse request - ", err)
 		}
 

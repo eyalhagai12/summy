@@ -1,24 +1,38 @@
 package templates
 
 import "summy/models"
+import "fmt"
 
-templ Home(taskList []models.Task, err error) {
+templ Home() {
     <div>
-        <h1 class="text-white text-3xl mb-4">Tasks:</h1>
-        <div class="grid">
-            if err != nil {
-                <div class="text-white">Failed to fetch tasks</div>
-            } else {
-                for _, task := range taskList {
-                    <div class="col-span-3 text-white p-4 bg-gray-800 hover:bg-gray-700 rounded mb-4">
-                        <h2 class="text-xl">{ task.Title }</h2>
-                        <p class="text-muted">{ task.Description }</p>
-                        if task.DueDate != nil {
-                            <p class="text-muted">Due: { task.DueDate.String() }</p>
-                        }
-                    </div>
-                }
+        <h1 class="text-white text-4xl mb-4">Tasks In Progress:</h1>
+        <p class="text-white" hx-get="/inProgressTasks?size=12&page=1" hx-trigger="load" hx-target="this">Loading tasks...</p>
+    </div>
+}
+
+templ TaskCard(task models.Task) {
+    <div class="text-white p-4 bg-gray-800 hover:bg-gray-700 rounded mb-4">
+        <h2 class="text-xl">{ task.Title }</h2>
+        <p class="text-muted">{ task.Description }</p>
+        if task.DueDate != nil {
+            <p class="text-muted">Due: { task.DueDate.String() }</p>
+        }
+    </div>
+}
+
+templ InProgressTasks(taskList []models.Task, page int) {
+    <div>
+        <div class="grid grid-cols-4 gap-3">
+            for _, task := range taskList {
+                @TaskCard(task)
             }
+        </div>
+        <div class="flex text-white">
+            if page > 1 {
+                <button class="px-2" hx-get={fmt.Sprintf("/inProgressTasks?size=12&page=%d", page - 1)}>prev</button>
+            }
+            <span>{ fmt.Sprintf("%d", page) }</span>
+            <button class="px-2" hx-get={fmt.Sprintf("/inProgressTasks?size=12&page=%d", page + 1)}>next</button>
         </div>
     </div>
 }

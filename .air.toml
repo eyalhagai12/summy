@@ -5,7 +5,7 @@ tmp_dir = "tmp"
 [build]
   args_bin = []
   bin = "tmp\\main.exe"
-  cmd = "templ generate && go build -o ./tmp/main.exe ."
+  cmd = "templ generate & templ generate --notify-proxy --proxybind localhost && go build -o ./tmp/main.exe ."
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]
   exclude_file = []
@@ -14,7 +14,7 @@ tmp_dir = "tmp"
   follow_symlink = false
   full_bin = ""
   include_dir = []
-  include_ext = ["go", "tpl", "templ", "html"]
+  include_ext = ["go", "templ"]
   include_file = []
   kill_delay = "0s"
   log = "build-errors.log"
@@ -44,9 +44,9 @@ tmp_dir = "tmp"
   clean_on_exit = false
 
 [proxy]
-  app_port = 0
-  enabled = false
-  proxy_port = 0
+  app_port = 8080
+  enabled = true
+  proxy_port = 7331
 
 [screen]
   clear_on_rebuild = false

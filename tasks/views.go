@@ -1,6 +1,7 @@
 package tasks
 
 import (
+	"fmt"
 	"summy/models"
 	"summy/templates"
 	"summy/workerpool"
@@ -23,11 +24,19 @@ func NewTaskViews(db *sqlx.DB, wp *workerpool.WorkerPool) *TaskViews {
 }
 
 func (tv *TaskViews) TasksHome(c echo.Context, request GetAllTasksRequest) templ.Component {
+	return templates.Home()
+}
+
+func (tv *TaskViews) InProgressTasks(c echo.Context, request InProgressTasksPageRequest) templ.Component {
+	offset := (request.Page - 1) * request.Size
+
+	fmt.Printf("offset: %d", offset)
+
 	tasks := []models.Task{}
-	err := tv.db.Select(&tasks, "SELECT * FROM tasks")
+	err := tv.db.Select(&tasks, "SELECT * FROM tasks LIMIT $2 OFFSET $1", offset, request.Size)
 	if err != nil {
-		return templates.Home(tasks, err)
+		return templates.InProgressTasks([]models.Task{}, 0)
 	}
 
-	return templates.Home(tasks, nil)
+	return templates.InProgressTasks(tasks, request.Page)
 }

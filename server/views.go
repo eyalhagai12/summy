@@ -11,4 +11,5 @@ import (
 func (s *Server) RegisterViews(app *echo.Echo) {
 	taskViews := tasks.NewTaskViews(s.db, s.wp)
 	app.GET("/", api.ViewFromFunc(taskViews.TasksHome, http.StatusOK))
+	app.GET("/inProgressTasks", api.ComponentFromFunc(taskViews.InProgressTasks, http.StatusOK))
 }
