@@ -4,15 +4,30 @@ import "summy/models"
 import "fmt"
 
 templ Home() {
-    <div>
-        <h1 class="text-white text-4xl mb-4">Tasks In Progress:</h1>
-        <p class="text-white" hx-get="/inProgressTasks?size=12&page=1" hx-trigger="load" hx-target="this">Loading tasks...</p>
+    <div class="flex flex-col gap-y-8">
+        <div>
+            <div class="flex justify-between align-center mb-2">
+                <h1 class="text-white text-4xl mb-4">Tasks In Progress:</h1>
+                <button type="button" hx-get="/addTaskModal" hx-target="body" hx-swap="beofreend" class="text-black bg-white px-2 py-1 m-2 rounded">+ Add Task</button>
+            </div>
+            <div class="text-white" hx-get="/tasks?size=9&page=1&status=in_progress" hx-trigger="load" hx-target="this" hx-swap="innerHTML">Loading tasks...</div>
+        </div>
+        
+        <div>
+            <div class="flex justify-between align-center mb-2">
+                <h1 class="text-white text-4xl mb-4">New Discovered Tasks:</h1>
+            </div>
+            <div class="text-white" hx-get="/tasks?size=9&page=1&status=discovered" hx-trigger="load" hx-target="this" hx-swap="innerHTML">Loading tasks...</div>
+        </div>
     </div>
 }
 
 templ TaskCard(task models.Task) {
     <div class="text-white p-4 bg-gray-800 hover:bg-gray-700 rounded mb-4">
-        <h2 class="text-xl">{ task.Title }</h2>
+        <div class="flex justify-between align-center mb-4">
+            <h2 class="text-xl">{ task.Title }</h2>
+            <span class="bg-green-700 rounded px-2 py-1">{task.Status}</span>
+        </div>
         <p class="text-muted">{ task.Description }</p>
         if task.DueDate != nil {
             <p class="text-muted">Due: { task.DueDate.String() }</p>
@@ -20,19 +35,38 @@ templ TaskCard(task models.Task) {
     </div>
 }
 
-templ InProgressTasks(taskList []models.Task, page int) {
+templ PaginatedTaskList(taskList []models.Task, page int, size int, url string) {
     <div>
-        <div class="grid grid-cols-4 gap-3">
+        <div id="taskList" class="grid grid-cols-3 gap-3">
             for _, task := range taskList {
                 @TaskCard(task)
             }
         </div>
-        <div class="flex text-white">
-            if page > 1 {
-                <button class="px-2" hx-get={fmt.Sprintf("/inProgressTasks?size=12&page=%d", page - 1)}>prev</button>
-            }
-            <span>{ fmt.Sprintf("%d", page) }</span>
-            <button class="px-2" hx-get={fmt.Sprintf("/inProgressTasks?size=12&page=%d", page + 1)}>next</button>
-        </div>
+        @PaginationTabs(url, len(taskList), page, size)
+    </div>
+}
+
+templ PaginationTabs(url string, nItems int, page int, size int) {
+    <div class="flex text-white">
+        if page > 1 {
+            <button class="me-2 px-2 py-1 bg-gray-700 rounded" hx-get={ fmt.Sprintf("%s&page=%d", url, page - 1) }>prev</button>
+        }
+        
+        <span class="px-2 py-1 bg-gray-700 rounded">{ fmt.Sprintf("%d", page) }</span>
+
+        if nItems == size {
+            <button class="ms-2 px-2 py-1 bg-gray-700 rounded" hx-get={ fmt.Sprintf("%s&page=%d", url, page + 1) }>next</button>
+        }
+    </div>
+}
+
+templ AddTaskModal() {
+    <div _="on closeModal remove me">
+        <form hx-post="/tasks" hx-trigger="submit" hx-swap="none">
+            <input type="text" name="title" class="rounded px-2 py-1" />
+            <input type="textarea" name="description" class="rounded px-2 py-1" />
+            <input type="date" name="dueDate" class="rounded px-2 py-1" />
+            <button type="submit" _="on click trigger closeModal" class="bg-gray-700 text-white px-2 py-1 rounded">Add Task</button>
+        </form>
     </div>
 }

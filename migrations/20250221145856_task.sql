@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TYPE task_status AS ENUM ('discovered', 'todo', 'in_progress', 'done', 'cancelled');
+CREATE TYPE task_status AS ENUM ('discovered', 'todo', 'in_progress', 'done', 'cancelled', 'discarded');
 
 CREATE TABLE tasks (
     id UUID PRIMARY KEY NOT NULL,

@@ -70,7 +70,7 @@ func Layout(title string, content templ.Component) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</head><body class=\"bg-black min-h-screen\"><main class=\"flex\"><div class=\"h-screen w-64 bg-gray-800 text-white flex flex-col p-4\"><h2 class=\"text-xl font-bold mb-4\">Summy</h2><a href=\"#\" class=\"py-2 px-4 hover:bg-gray-700 rounded\">Dashboard</a> <a href=\"#\" class=\"py-2 px-4 hover:bg-gray-700 rounded\">Sources</a> <a href=\"#\" class=\"py-2 px-4 hover:bg-gray-700 rounded\">Tasks</a></div><div class=\"flex-1 p-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</head><body class=\"bg-black min-h-screen\"><main class=\"flex\"><div class=\"h-screen w-64 bg-gray-800 text-white flex flex-col p-4\"><h2 class=\"text-xl font-bold mb-4\">Summy</h2><a href=\"/\" class=\"py-2 px-4 hover:bg-gray-700 rounded\">Dashboard</a> <a href=\"#\" class=\"py-2 px-4 hover:bg-gray-700 rounded\">Sources</a> <a href=\"#\" class=\"py-2 px-4 hover:bg-gray-700 rounded\">Tasks</a></div><div class=\"flex-1 p-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
