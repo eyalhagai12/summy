@@ -10,7 +10,7 @@ templ Home() {
         <div>
             <div class="flex justify-between align-center mb-2">
                 <h1 class="text-white text-4xl mb-4">Tasks In Progress:</h1>
-                <button type="button" hx-get="/addTaskModal" hx-target="body" hx-swap="beofreend" class="text-black bg-white px-2 py-1 m-2 rounded">+ Add Task</button>
+                <button type="button" hx-get="/addTaskModal" hx-target="body" hx-swap="beforeend" class="text-black bg-white px-2 py-1 m-2 rounded">+ Add Task</button>
             </div>
             <div class="text-white" hx-get="/tasks?size=9&page=1&status=in_progress" hx-trigger="load" hx-target="this" hx-swap="innerHTML">Loading tasks...</div>
         </div>
@@ -84,11 +84,22 @@ templ PaginationTabs(pageUrl *url.URL, nItems int, page int, size int) {
 }
 
 templ AddTaskModal() {
-    <div _="on closeModal remove me">
-        <form hx-post="/tasks" hx-trigger="submit" hx-swap="none">
+    <div _="on closeModal remove me" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+        <form hx-post="/tasks" hx-trigger="submit" hx-swap="none" class="bg-gray-800 p-4 rounded flex flex-col gap-y-2">
+            <div class="flex justify-between mb-2">
+                <h2 class="text-white text-2xl mb-4">Add Task</h2>
+                <span class="text-2xl text-white" _="on click trigger closeModal">x</span>
+            </div>
+            
+            <label for="title" class="text-white">Title:</label>
             <input type="text" name="title" class="rounded px-2 py-1" />
+            
+            <label for="description" class="text-white">Description:</label>
             <input type="textarea" name="description" class="rounded px-2 py-1" />
+            
+            <label for="dueDate" class="text-white">Due Date:</label>
             <input type="date" name="dueDate" class="rounded px-2 py-1" />
+
             <button type="submit" _="on click trigger closeModal" class="bg-gray-700 text-white px-2 py-1 rounded">Add Task</button>
         </form>
     </div>

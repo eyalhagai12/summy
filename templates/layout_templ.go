@@ -60,7 +60,7 @@ func Layout(title string, content templ.Component) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<script src=\"https://cdn.tailwindcss.com\"></script> <script src=\"https://unpkg.com/htmx.org@2.0.4\"></script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<script src=\"https://cdn.tailwindcss.com\"></script> <script src=\"https://unpkg.com/htmx.org@2.0.4\"></script> <script src=\"https://unpkg.com/hyperscript.org@0.9.14\"></script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
