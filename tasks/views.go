@@ -24,7 +24,7 @@ func NewTaskViews(db *sqlx.DB, wp *workerpool.WorkerPool) *TaskViews {
 	}
 }
 
-func (tv *TaskViews) TasksHome(c echo.Context, request GetAllTasksRequest) templ.Component {
+func (tv *TaskViews) TasksHome(c echo.Context, _ any) templ.Component {
 	return templates.Home()
 }
 
@@ -40,10 +40,10 @@ func (tv *TaskViews) TaskList(c echo.Context, request PaginatedTasksRequest) tem
 	err := tv.db.Select(&tasks, "SELECT * FROM tasks WHERE status = $3 LIMIT $2 OFFSET $1", offset, request.Size, request.Status)
 	if err != nil {
 		fmt.Println("error: %w", err)
-		return templates.PaginatedTaskList([]models.Task{}, 0, 1, nextPageURL.String())
+		return templates.PaginatedTaskList([]models.Task{}, 0, 1, nextPageURL)
 	}
 
-	return templates.PaginatedTaskList(tasks, request.Page, request.Size, nextPageURL.String())
+	return templates.PaginatedTaskList(tasks, request.Page, request.Size, nextPageURL)
 }
 
 func (tv *TaskViews) AddTaskModal(c echo.Context, _ any) templ.Component {
